@@ -5,7 +5,7 @@ RUN apt-get update \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
 RUN cd /tmp \
- && curl -sLO https://github.com/plietar/librespot/archive/master.zip \
+ && curl -sLO https://github.com/librespot-org/librespot/archive/master.zip \
  && unzip master.zip \
  && cd librespot-master \
  && cargo build --release \
