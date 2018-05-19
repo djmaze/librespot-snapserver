@@ -1,4 +1,4 @@
-FROM rust:1 AS librespot
+FROM rust:1.25 AS librespot
 
 RUN apt-get update \
  && apt-get -y install build-essential portaudio19-dev curl unzip \
