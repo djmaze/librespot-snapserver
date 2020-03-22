@@ -10,10 +10,9 @@ _Note: You need a Spotify premium account._
 
 Run it like this (on your PC or ARM-based device):
 
-    docker run -d --name snapserver --net host mazzolino/librespot-snapserver \
-      -s "spotify:///librespot?name=Spotify&username=<my username>&password=<my password>&devicename=Snapcast&bitrate=320"
+    docker run -d --name snapserver --net host -e DEVICE_NAME=Snapcast mazzolino/librespot-snapserver
 
-Now you can connect your snapclient to your host's ip. The receiver should show up in Spotify under the `devicename` given above (e.g. `Snapcast`). Have fun playing music!
+Now you can connect your snapclient to your host's ip. The receiver should show up in Spotify under the `DEVICE_NAME` given above (e.g. `Snapcast`). Have fun playing music!
 
 ## Building the images
 
@@ -31,5 +30,4 @@ Then, on your PC:
 
 Notes:
 
-* Add `SNAPCAST_VERSION=x.xx.x` in order to build a different version of snapcast.
-* Since there are no official librespot releases, It always uses the latest librespot version from git.
+* Add `SNAPCAST_VERSION=x.xx.x` in order to build a different version of snapcast or `LIBRESPOT_VERSION=x.x.x` to build a different version of librespot.
