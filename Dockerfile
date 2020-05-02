@@ -9,7 +9,8 @@ ARG LIBRESPOT_VERSION=0.1.1
 RUN cd /tmp \
  && curl -sLO https://github.com/librespot-org/librespot/archive/v0.1.1.zip \
  && unzip v${LIBRESPOT_VERSION}.zip \
- && cd librespot-${LIBRESPOT_VERSION} \
+ && mv librespot-${LIBRESPOT_VERSION} librespot \
+ && cd librespot \
  && cargo build --release \
  && chmod +x target/release/librespot
 
@@ -21,13 +22,12 @@ RUN apt-get update \
 
 ARG ARCH=amd64
 ARG SNAPCAST_VERSION=0.19.0
-ARG LIBRESPOT_VERSION=0.1.1
 
 RUN curl -sL -o /tmp/snapserver.deb https://github.com/badaix/snapcast/releases/download/v${SNAPCAST_VERSION}/snapserver_${SNAPCAST_VERSION}-1_${ARCH}.deb \
  && dpkg -i /tmp/snapserver.deb \
  && rm /tmp/snapserver.deb
 
-COPY --from=librespot /tmp/librespot-${LIBRESPOT_VERSION}/target/release/librespot /usr/local/bin/
+COPY --from=librespot /tmp/librespot/target/release/librespot /usr/local/bin/
 
 ADD init.sh /
 RUN chmod +x /init.sh
