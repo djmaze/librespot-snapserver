@@ -12,6 +12,10 @@ Run it like this (on your PC or ARM-based device):
 
     docker run -d --name snapserver --net host -e DEVICE_NAME=Snapcast mazzolino/librespot-snapserver
 
+That will make the device available to all Spotify clients in your network. Add your Spotify credentials in order to limit control to clients logged in with your account:
+
+    docker run -d --name snapserver --net host -e DEVICE_NAME=Snapcast -e USERNAME=my-spotify-username -e PASSWORD=my-spotify-password mazzolino/librespot-snapserver
+
 Now you can connect your snapclient to your host's ip. The receiver should show up in Spotify under the `DEVICE_NAME` given above (e.g. `Snapcast`). Have fun playing music!
 
 ## Building the images
