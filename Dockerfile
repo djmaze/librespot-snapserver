@@ -29,9 +29,8 @@ RUN curl -sL -o /tmp/snapserver.deb https://github.com/badaix/snapcast/releases/
 
 COPY --from=librespot /tmp/librespot/target/release/librespot /usr/local/bin/
 
-ADD init.sh /
-RUN chmod +x /init.sh
-CMD ["/init.sh"]
+COPY run.sh /
+CMD ["/run.sh"]
 
 ENV DEVICE_NAME=Snapcast
 EXPOSE 1704/tcp 1705/tcp
