@@ -8,6 +8,8 @@ platform:
 steps:
   - name: build
     image: plugins/docker
+    environment:
+      ARCH: amd64
     settings:
       auto_tag: true
       auto_tag_suffix: amd64
@@ -32,6 +34,8 @@ platform:
 steps:
   - name: build
     image: plugins/docker
+    environment:
+      ARCH: armhf
     settings:
       auto_tag: true
       auto_tag_suffix: arm
@@ -56,6 +60,8 @@ platform:
 steps:
   - name: build
     image: plugins/docker
+    environment:
+      ARCH: arm64
     settings:
       auto_tag: true
       auto_tag_suffix: arm64
