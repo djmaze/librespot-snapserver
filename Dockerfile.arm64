@@ -20,7 +20,7 @@ RUN apt-get update \
  && apt-get -y install build-essential curl git libasound2-dev libboost-dev libopus-dev libvorbisidec-dev libvorbis-dev libflac-dev alsa-utils libavahi-client-dev avahi-daemon \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
-ARG SNAPCAST_VERSION=v0.19.0
+ARG SNAPCAST_VERSION=0.19.0
 ARG BOOST_VERSION=1.72.0
 ARG BOOST_VERSION_UNDERSCORED=1_72_0
 
