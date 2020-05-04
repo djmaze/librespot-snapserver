@@ -33,7 +33,7 @@ platform:
 
 steps:
   - name: build
-    image: plugins/docker
+    image: plugins/docker:linux-arm
     settings:
       build_args:
         - ARCH=armhf
