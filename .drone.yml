@@ -8,9 +8,9 @@ platform:
 steps:
   - name: build
     image: plugins/docker
-    environment:
-      ARCH: amd64
     settings:
+      build_args:
+        - ARCH=amd64
       auto_tag: true
       auto_tag_suffix: amd64
       repo: mazzolino/librespot-snapserver
@@ -34,9 +34,9 @@ platform:
 steps:
   - name: build
     image: plugins/docker
-    environment:
-      ARCH: armhf
     settings:
+      build_args:
+        - ARCH=armhf
       auto_tag: true
       auto_tag_suffix: arm
       repo: mazzolino/librespot-snapserver
@@ -60,9 +60,9 @@ platform:
 steps:
   - name: build
     image: plugins/docker
-    environment:
-      ARCH: arm64
     settings:
+      build_args:
+        - ARCH=arm64
       auto_tag: true
       auto_tag_suffix: arm64
       repo: mazzolino/librespot-snapserver
