@@ -1,18 +1,12 @@
-FROM rust:1.42 AS librespot
+FROM rust:1.45 AS librespot
 
 RUN apt-get update \
  && apt-get -y install build-essential portaudio19-dev curl unzip \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
-ARG LIBRESPOT_VERSION=0.1.1
+ARG LIBRESPOT_VERSION=0.1.3
 
-RUN cd /tmp \
- && curl -sLO https://github.com/librespot-org/librespot/archive/v0.1.1.zip \
- && unzip v${LIBRESPOT_VERSION}.zip \
- && mv librespot-${LIBRESPOT_VERSION} librespot \
- && cd librespot \
- && cargo build --release \
- && chmod +x target/release/librespot
+RUN cargo install librespot --version ${LIBRESPOT_VERSION}
 
 FROM ubuntu:bionic
 
@@ -21,13 +15,13 @@ RUN apt-get update \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
 ARG ARCH=amd64
-ARG SNAPCAST_VERSION=0.19.0
+ARG SNAPCAST_VERSION=0.20.0
 
 RUN curl -sL -o /tmp/snapserver.deb https://github.com/badaix/snapcast/releases/download/v${SNAPCAST_VERSION}/snapserver_${SNAPCAST_VERSION}-1_${ARCH}.deb \
  && dpkg -i /tmp/snapserver.deb \
  && rm /tmp/snapserver.deb
 
-COPY --from=librespot /tmp/librespot/target/release/librespot /usr/local/bin/
+COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
 
 COPY run.sh /
 CMD ["/run.sh"]
