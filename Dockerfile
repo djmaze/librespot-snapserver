@@ -4,15 +4,11 @@ RUN apt-get update \
  && apt-get -y install build-essential portaudio19-dev curl unzip \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
+ARG ARCH=amd64
 ARG LIBRESPOT_VERSION=0.1.3
 
-RUN cd /tmp \
- && curl -sLO https://github.com/librespot-org/librespot/archive/v${LIBRESPOT_VERSION}.zip \
- && unzip v${LIBRESPOT_VERSION}.zip \
- && mv librespot-${LIBRESPOT_VERSION} librespot \
- && cd librespot \
- && cargo build --release \
- && chmod +x target/release/librespot
+COPY ./install-librespot.sh /tmp/
+RUN /tmp/install-librespot.sh
 
 FROM ubuntu:bionic
 
@@ -27,7 +23,7 @@ RUN curl -sL -o /tmp/snapserver.deb https://github.com/badaix/snapcast/releases/
  && dpkg -i /tmp/snapserver.deb \
  && rm /tmp/snapserver.deb
 
-COPY --from=librespot /tmp/librespot/target/release/librespot /usr/local/bin/
+COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
 
 COPY run.sh /
 CMD ["/run.sh"]
