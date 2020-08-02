@@ -8,4 +8,4 @@ fi
 
 sed -i "s,^stream = .*,stream = librespot:///librespot?name=Spotify\&devicename=$DEVICE_NAME\&bitrate=320\&volume=100$credentials," /etc/snapserver.conf
 
-snapserver
+exec snapserver
