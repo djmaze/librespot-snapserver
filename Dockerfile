@@ -10,7 +10,7 @@ ARG LIBRESPOT_VERSION=0.1.3
 COPY ./install-librespot.sh /tmp/
 RUN /tmp/install-librespot.sh
 
-FROM debian:sid
+FROM debian:bullseye
 
 RUN apt-get update \
  && apt-get -y install snapserver \
