@@ -10,18 +10,11 @@ ARG LIBRESPOT_VERSION=0.1.3
 COPY ./install-librespot.sh /tmp/
 RUN /tmp/install-librespot.sh
 
-FROM ubuntu:bionic
+FROM debian:sid
 
 RUN apt-get update \
- && apt-get -y install curl libportaudio2 libvorbis0a libavahi-client3 libflac8 libvorbisenc2 libvorbisfile3 libopus0 \
+ && apt-get -y install snapserver \
  && apt-get clean && rm -fR /var/lib/apt/lists
-
-ARG ARCH=amd64
-ARG SNAPCAST_VERSION=0.20.0
-
-RUN curl -sL -o /tmp/snapserver.deb https://github.com/badaix/snapcast/releases/download/v${SNAPCAST_VERSION}/snapserver_${SNAPCAST_VERSION}-1_${ARCH}.deb \
- && dpkg -i /tmp/snapserver.deb \
- && rm /tmp/snapserver.deb
 
 COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
 
