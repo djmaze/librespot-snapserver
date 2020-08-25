@@ -13,7 +13,7 @@ RUN /tmp/install-librespot.sh
 FROM debian:bullseye
 
 RUN apt-get update \
- && apt-get -y install libasound2 snapserver \
+ && apt-get -y install libasound2 snapserver mpv \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
 COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
