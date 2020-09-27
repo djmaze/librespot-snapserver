@@ -1,6 +1,6 @@
 # librespot-snapserver
 
-Run a [Snapcast](https://github.com/badaix/snapcast) server with [Spotify support](https://github.com/plietar/librespot) as a Docker container.
+Run a [Snapcast](https://github.com/badaix/snapcast) server with [Spotify support](https://github.com/librespot-org/librespot) as a Docker container.
 
 This is a multi-arch image currently working on the `amd64` and `armhf` platforms. This means you can use the same image regardless of platform.
 
