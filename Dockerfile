@@ -10,10 +10,14 @@ ARG LIBRESPOT_VERSION=0.1.3
 COPY ./install-librespot.sh /tmp/
 RUN /tmp/install-librespot.sh
 
-FROM debian:bullseye
+FROM debian:buster
+
+ARG SNAPCAST_VERSION=0.23.0
 
 RUN apt-get update \
- && apt-get -y install libasound2 snapserver mpv \
+ && apt-get install -y --no-install-recommends curl libasound2 mpv \
+ && curl -L -o /tmp/snapserver.deb "https://github.com/badaix/snapcast/releases/download/v${SNAPCAST_VERSION}/snapserver_${SNAPCAST_VERSION}-1_${ARCH}.deb" \
+ && dpkg -i /tmp/snapserver.deb || apt-get install -f -y --no-install-recommends \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
 COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
