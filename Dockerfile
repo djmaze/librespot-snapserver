@@ -15,7 +15,7 @@ FROM debian:buster
 ARG SNAPCAST_VERSION=0.23.0
 
 RUN apt-get update \
- && apt-get install -y --no-install-recommends curl libasound2 mpv \
+ && apt-get install -y --no-install-recommends ca-certificates curl libasound2 mpv \
  && curl -L -o /tmp/snapserver.deb "https://github.com/badaix/snapcast/releases/download/v${SNAPCAST_VERSION}/snapserver_${SNAPCAST_VERSION}-1_${ARCH}.deb" \
  && dpkg -i /tmp/snapserver.deb || apt-get install -f -y --no-install-recommends \
  && apt-get clean && rm -fR /var/lib/apt/lists
