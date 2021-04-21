@@ -13,6 +13,7 @@ RUN /tmp/install-librespot.sh
 FROM debian:buster
 
 ARG SNAPCAST_VERSION=0.23.0
+ARG ARCH=amd64
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends ca-certificates curl libasound2 mpv \
