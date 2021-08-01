@@ -1,0 +1,49 @@
+FROM rust:1.48 AS librespot
+
+RUN apt-get update \
+ && apt-get -y install build-essential portaudio19-dev curl unzip \
+ && apt-get clean && rm -fR /var/lib/apt/lists
+
+ARG ARCH=amd64
+ARG LIBRESPOT_VERSION=0.2.0
+
+COPY ./install-librespot.sh /tmp/
+RUN /tmp/install-librespot.sh
+
+FROM ubuntu:bionic AS snapcast
+
+RUN apt-get update \
+ && apt-get -y install build-essential curl git libasound2-dev libboost-dev libopus-dev libvorbisidec-dev libvorbis-dev libflac-dev alsa-utils libavahi-client-dev avahi-daemon libsoxr-dev \
+ && apt-get clean && rm -fR /var/lib/apt/lists
+
+ARG SNAPCAST_VERSION=0.25.0
+ARG BOOST_VERSION=1.76.0
+ARG BOOST_VERSION_UNDERSCORED=1_76_0
+
+RUN cd /tmp \
+ && curl -L -o boost_${BOOST_VERSION_UNDERSCORED}.tar.gz  https://boostorg.jfrog.io/artifactory/main/release/${BOOST_VERSION}/source/boost_${BOOST_VERSION_UNDERSCORED}.tar.gz \
+ && tar xzf boost_${BOOST_VERSION_UNDERSCORED}.tar.gz \
+ && git clone --single-branch --branch v${SNAPCAST_VERSION} https://github.com/badaix/snapcast.git \
+ && cd snapcast \
+ && git submodule update --init --recursive \
+ && ADD_CFLAGS="-I/tmp/boost_${BOOST_VERSION_UNDERSCORED}" make -C server \
+ && cp server/snapserver /usr/local/bin/ \
+ && cp server/etc/snapserver.conf /etc/ \
+ && cd .. \
+ && rm snapcast boost_${BOOST_VERSION_UNDERSCORED} -fR
+
+FROM ubuntu:bionic
+
+RUN apt-get update \
+ && apt-get -y install curl libportaudio2 libvorbis0a libavahi-client3 libflac8 libvorbisenc2 libvorbisfile3 libopus0 libsoxr0 \
+ && apt-get clean && rm -fR /var/lib/apt/lists
+
+COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
+COPY --from=snapcast /usr/local/bin/snapserver /usr/local/bin/
+COPY --from=snapcast /etc/snapserver.conf /etc/
+
+COPY run.sh /
+CMD ["/run.sh"]
+
+ENV DEVICE_NAME=Snapcast
+EXPOSE 1704/tcp 1705/tcp

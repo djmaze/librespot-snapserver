@@ -1,18 +1,18 @@
-FROM rust:1.45 AS librespot
+FROM rust:1.48 AS librespot
 
 RUN apt-get update \
  && apt-get -y install build-essential portaudio19-dev curl unzip \
  && apt-get clean && rm -fR /var/lib/apt/lists
 
 ARG ARCH=amd64
-ARG LIBRESPOT_VERSION=0.1.3
+ARG LIBRESPOT_VERSION=0.2.0
 
 COPY ./install-librespot.sh /tmp/
 RUN /tmp/install-librespot.sh
 
 FROM debian:buster
 
-ARG SNAPCAST_VERSION=0.23.0
+ARG SNAPCAST_VERSION=0.25.0
 ARG ARCH=amd64
 
 RUN apt-get update \

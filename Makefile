@@ -1,6 +1,6 @@
 ARCH=amd64
-SNAPCAST_VERSION=0.24.0
-LIBRESPOT_VERSION=0.1.1
+SNAPCAST_VERSION=0.25.0
+LIBRESPOT_VERSION=0.2.0
 IMAGE_NAME=mazzolino/librespot-snapserver
 
 MANIFEST_IMAGE=${IMAGE_NAME}:${SNAPCAST_VERSION}
@@ -22,8 +22,12 @@ endif
 
 
 build:
-		docker build -t ${ARCH_IMAGE} --build-arg ARCH=${ARCH} --build-arg SNAPCAST_VERSION=${SNAPCAST_VERSION} .
+ifeq ($(ARCH),arm64)
+		docker build -t ${ARCH_IMAGE} --build-arg ARCH=${ARCH} --build-arg SNAPCAST_VERSION=${SNAPCAST_VERSION} --build-arg LIBRESPOT_VERSION=${LIBRESPOT_VERSION} -f Dockerfile.arm64 .
+else
+		docker build -t ${ARCH_IMAGE} --build-arg ARCH=${ARCH} --build-arg SNAPCAST_VERSION=${SNAPCAST_VERSION} --build-arg LIBRESPOT_VERSION=${LIBRESPOT_VERSION} .
 		docker tag ${ARCH_IMAGE} ${LATEST_ARCH_IMAGE}
+endif
 ifeq ($(ARCH),armhf)
 		docker tag ${MANIFEST_IMAGE}-armhf ${MANIFEST_IMAGE}-arm
 		docker tag ${LATEST_MANIFEST_IMAGE}-armhf ${LATEST_MANIFEST_IMAGE}-arm
