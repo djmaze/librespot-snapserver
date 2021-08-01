@@ -40,6 +40,7 @@ steps:
       auto_tag: true
       auto_tag_suffix: arm
       repo: mazzolino/librespot-snapserver
+      dockerfile: Dockerfile.armhf
       username:
         from_secret: docker_username
       password:
@@ -66,6 +67,7 @@ steps:
       auto_tag: true
       auto_tag_suffix: arm64
       repo: mazzolino/librespot-snapserver
+      dockerfile: Dockerfile.arm64
       username:
         from_secret: docker_username
       password:

@@ -24,6 +24,8 @@ endif
 build:
 ifeq ($(ARCH),arm64)
 		docker build -t ${ARCH_IMAGE} --build-arg ARCH=${ARCH} --build-arg SNAPCAST_VERSION=${SNAPCAST_VERSION} --build-arg LIBRESPOT_VERSION=${LIBRESPOT_VERSION} -f Dockerfile.arm64 .
+else ifeq($(ARCH),armhf)
+		docker build -t ${ARCH_IMAGE} --build-arg ARCH=${ARCH} --build-arg SNAPCAST_VERSION=${SNAPCAST_VERSION} --build-arg LIBRESPOT_VERSION=${LIBRESPOT_VERSION} -f Dockerfile.armhf .
 else
 		docker build -t ${ARCH_IMAGE} --build-arg ARCH=${ARCH} --build-arg SNAPCAST_VERSION=${SNAPCAST_VERSION} --build-arg LIBRESPOT_VERSION=${LIBRESPOT_VERSION} .
 		docker tag ${ARCH_IMAGE} ${LATEST_ARCH_IMAGE}
