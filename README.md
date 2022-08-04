@@ -20,18 +20,20 @@ Now you can connect your snapclient to your host's ip. The receiver should show 
 
 ## Building the images
 
-* The following lines will build _and push_ your image. Use the `build` make target in order to just build the image locally.
-* Replace `my/image` with your own image name.
+In order to build images for the non-amd64 architectures, you need to build on amd64 machine and enable qemu binfmt support. The easiest way for this is to run:
 
-On your ARM device:
+```bash
+docker run --privileged --rm tonistiigi/binfmt --install all
+```
 
-    sudo make IMAGE_NAME=my/image ARCH=armhf
+The following command will build the images for all supported architectures. Replace `my/image` with your own image name:
 
-Then, on your PC:
+```bash
+docker buildx build --platform=linux/amd64,linux/arm/v7,linux/arm64 -t my/image --load .
+```
 
-    sudo make IMAGE_NAME=my/image
-    make manifest IMAGE_NAME=my/image
+To build only an image for the current architecture, run:
 
-Notes:
-
-* Add `SNAPCAST_VERSION=x.xx.x` in order to build a different version of snapcast or `LIBRESPOT_VERSION=x.x.x` to build a different version of librespot.
+```bash
+docker buildx build -t my/image --load .
+```

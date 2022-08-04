@@ -1,105 +1,23 @@
-kind: pipeline
-name: amd64
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: build
-    image: plugins/docker
-    settings:
-      build_args:
-        - ARCH=amd64
-      auto_tag: true
-      auto_tag_suffix: amd64
-      repo: mazzolino/librespot-snapserver
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-    when:
-      event:
-        exclude:
-          - pull_request
-
 ---
 kind: pipeline
-name: arm
-
-platform:
-  os: linux
-  arch: arm64
+name: release
 
 steps:
-  - name: build
-    image: plugins/docker:linux-arm
+  - name: build & push release image
+    image: thegeeklab/drone-docker-buildx:20.11@sha256:6edea41f1fdf2b3c0a536ce3f14da05ee261205919dfbdee6df58a050f2474a7
     settings:
-      build_args:
-        - ARCH=armhf
       auto_tag: true
-      auto_tag_suffix: arm
       repo: mazzolino/librespot-snapserver
-      dockerfile: Dockerfile.armhf
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-    when:
-      event:
-        exclude:
-          - pull_request
-
----
-kind: pipeline
-name: arm64
-
-platform:
-  os: linux
-  arch: arm64
-
-steps:
-  - name: build
-    image: plugins/docker
-    settings:
-      build_args:
-        - ARCH=arm64
-      auto_tag: true
-      auto_tag_suffix: arm64
-      repo: mazzolino/librespot-snapserver
-      dockerfile: Dockerfile.arm64
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-    when:
-      event:
-        exclude:
-          - pull_request
----
-kind: pipeline
-name: manifest
-
-steps:
-  - name: manifest
-    image: plugins/manifest:1.2
-    settings:
-      spec: manifest.tmpl
-      auto_tag: true
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
       platforms:
         - linux/amd64
-        - linux/arm
         - linux/arm64
-    when:
-      event:
-        exclude:
-          - pull_request
+        - linux/armhf
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+---
+kind: signature
+hmac: 845b542a245bd615a92889da99ea145a2fdbc0357e4d825198519bb802eb63b1
 
-depends_on:
-  - amd64
-  - arm
-  - arm64
+...
