@@ -7,7 +7,7 @@ RUN apt-get update \
 ARG LIBRESPOT_VERSION=0.4.2
 
 COPY ./install-librespot.sh /tmp/
-RUN --mount=type=tmpfs,target=/usr/local/cargo/registry/index /tmp/install-librespot.sh
+RUN --mount=type=tmpfs,size=512M,target=/usr/local/cargo/registry/index /tmp/install-librespot.sh
 
 ###
 
