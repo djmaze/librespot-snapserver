@@ -1,105 +1,56 @@
-kind: pipeline
-name: amd64
-
-platform:
-  os: linux
-  arch: amd64
-
-steps:
-  - name: build
-    image: plugins/docker
-    settings:
-      build_args:
-        - ARCH=amd64
-      auto_tag: true
-      auto_tag_suffix: amd64
-      repo: mazzolino/librespot-snapserver
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-    when:
-      event:
-        exclude:
-          - pull_request
-
 ---
 kind: pipeline
-name: arm
-
-platform:
-  os: linux
-  arch: arm64
+name: release
 
 steps:
-  - name: build
-    image: plugins/docker:linux-arm
+  - name: build & push release image
+    image: thegeeklab/drone-docker-buildx:20.12.1@sha256:5439d579562a605953b386df64f1a469720f5358fa1bd0bdf225ae8d48d652b7
     settings:
-      build_args:
-        - ARCH=armhf
       auto_tag: true
-      auto_tag_suffix: arm
       repo: mazzolino/librespot-snapserver
-      dockerfile: Dockerfile.armhf
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-    when:
-      event:
-        exclude:
-          - pull_request
-
----
-kind: pipeline
-name: arm64
-
-platform:
-  os: linux
-  arch: arm64
-
-steps:
-  - name: build
-    image: plugins/docker
-    settings:
-      build_args:
-        - ARCH=arm64
-      auto_tag: true
-      auto_tag_suffix: arm64
-      repo: mazzolino/librespot-snapserver
-      dockerfile: Dockerfile.arm64
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
-    when:
-      event:
-        exclude:
-          - pull_request
----
-kind: pipeline
-name: manifest
-
-steps:
-  - name: manifest
-    image: plugins/manifest:1
-    settings:
-      spec: manifest.tmpl
-      auto_tag: true
-      username:
-        from_secret: docker_username
-      password:
-        from_secret: docker_password
+      cache_from: mazzolino/librespot-snapserver:cache
+      cache_to: mazzolino/librespot-snapserver:cache
       platforms:
         - linux/amd64
-        - linux/arm
         - linux/arm64
-    when:
-      event:
-        exclude:
-          - pull_request
+        - linux/armhf
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
 
-depends_on:
-  - amd64
-  - arm
-  - arm64
+trigger:
+  event:
+    exclude:
+      - pull_request
+
+---
+kind: pipeline
+name: pr
+
+steps:
+  - name: build & push pr image
+    image: thegeeklab/drone-docker-buildx:20.12.1@sha256:5439d579562a605953b386df64f1a469720f5358fa1bd0bdf225ae8d48d652b7
+    settings:
+      repo: mazzolino/librespot-snapserver
+      tags:
+        - pr-${DRONE_PULL_REQUEST}
+      cache_from: mazzolino/librespot-snapserver:cache
+      cache_to: mazzolino/librespot-snapserver:cache
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/armhf
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+
+trigger:
+  event:
+    - pull_request
+---
+kind: signature
+hmac: 24ce5dc1d5c46b85b970f87495da708b275b2a3b94fd9d11e8e30b884807e626
+
+...
