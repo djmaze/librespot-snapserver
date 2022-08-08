@@ -4,10 +4,12 @@ name: release
 
 steps:
   - name: build & push release image
-    image: thegeeklab/drone-docker-buildx:20.11@sha256:6edea41f1fdf2b3c0a536ce3f14da05ee261205919dfbdee6df58a050f2474a7
+    image: thegeeklab/drone-docker-buildx:20.12.1@sha256:5439d579562a605953b386df64f1a469720f5358fa1bd0bdf225ae8d48d652b7
     settings:
       auto_tag: true
       repo: mazzolino/librespot-snapserver
+      cache_from: mazzolino/librespot-snapserver:cache
+      cache_to: mazzolino/librespot-snapserver:cache
       platforms:
         - linux/amd64
         - linux/arm64
@@ -18,6 +20,6 @@ steps:
         from_secret: docker_password
 ---
 kind: signature
-hmac: 845b542a245bd615a92889da99ea145a2fdbc0357e4d825198519bb802eb63b1
+hmac: 2882621298eb9832e2ff71d050d3b39c6d4f8864600df0aa29107ce4617ad0ea
 
 ...
