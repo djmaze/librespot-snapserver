@@ -18,8 +18,39 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
+
+trigger:
+  event:
+    exclude:
+      - pull_request
+
+---
+kind: pipeline
+name: pr
+
+steps:
+  - name: build & push pr image
+    image: thegeeklab/drone-docker-buildx:20.12.1@sha256:5439d579562a605953b386df64f1a469720f5358fa1bd0bdf225ae8d48d652b7
+    settings:
+      repo: mazzolino/librespot-snapserver
+      tags:
+        - pr-${DRONE_PULL_REQUEST}
+      cache_from: mazzolino/librespot-snapserver:cache
+      cache_to: mazzolino/librespot-snapserver:cache
+      platforms:
+        - linux/amd64
+        - linux/arm64
+        - linux/armhf
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+
+trigger:
+  event:
+    - pull_request
 ---
 kind: signature
-hmac: 2882621298eb9832e2ff71d050d3b39c6d4f8864600df0aa29107ce4617ad0ea
+hmac: 24ce5dc1d5c46b85b970f87495da708b275b2a3b94fd9d11e8e30b884807e626
 
 ...
