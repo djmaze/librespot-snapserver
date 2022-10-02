@@ -18,6 +18,25 @@ That will make the device available to all Spotify clients in your network. Add 
 
 Now you can connect your snapclient to your host's ip. The receiver should show up in Spotify under the `DEVICE_NAME` given above (e.g. `Snapcast`). Have fun playing music!
 
+### Custom configuration
+
+If you want to configure the snapcast server differently, you can mount your own `snapserver.conf` into the container:
+
+```bash
+docker run -d --name snapserver --net host -v /path/to/your/snapserver.conf:/etc/snapserver.conf:ro mazzolino/librespot-snapserver
+```
+
+NOTE: The configuration file needs to be mounted *read-only* for this to work.
+
+Make sure to include a Spotify source in your configuration, like this:
+
+```
+[stream]
+source = librespot:///librespot?name=Spotify&devicename=DEVICE_NAME&bitrate=320&volume=100&username=USERNAME&password=PASSWORD
+```
+
+(Replace `DEVICE_NAME`, `USERNAME` and `PASSWORD` accordingly.)
+
 ## Building the images
 
 In order to build images for the non-amd64 architectures, you need to build on amd64 machine and enable qemu binfmt support. The easiest way for this is to run:
