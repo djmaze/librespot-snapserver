@@ -1,25 +1,10 @@
-FROM rust:1.62-bullseye AS librespot
+FROM alpine:3.17.1
 
-RUN apt-get update \
- && apt-get -y install build-essential portaudio19-dev curl \
- && apt-get clean && rm -fR /var/lib/apt/lists
+ARG LIBRESPOT_VERSION=0.4.2-r1
+ARG SNAPCAST_VERSION=0.26.0-r3
 
-ARG LIBRESPOT_VERSION=0.4.2
-
-COPY ./install-librespot.sh /tmp/
-RUN --mount=type=tmpfs,size=512M,target=/usr/local/cargo/registry/index /tmp/install-librespot.sh
-
-###
-
-FROM debian:bullseye
-
-RUN echo "deb http://deb.debian.org/debian bullseye-backports main" >/etc/apt/sources.list.d/bullseye-backports.list
-
-RUN apt-get update \
- && apt-get -y install snapserver/bullseye-backports \
- && apt-get clean && rm -fR /var/lib/apt/lists
-
-COPY --from=librespot /usr/local/cargo/bin/librespot /usr/local/bin/
+RUN echo "https://dl-cdn.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories
+RUN apk add --no-cache bash snapcast=${SNAPCAST_VERSION} librespot=${LIBRESPOT_VERSION} sed
 
 COPY run.sh /
 CMD ["/run.sh"]
