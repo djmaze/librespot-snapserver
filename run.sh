@@ -12,6 +12,8 @@ else
   credentials=""
   if [[ -n "${USERNAME:-}" ]] && [[ -n "${PASSWORD:-}" ]]; then
     credentials="\&username=$USERNAME\&password=$PASSWORD"
+  elif [[ -n "${CACHE}" ]]; then
+    credentials="\&cache=$CACHE"
   fi
 
   sed -i "s,^source = .*,source = librespot:///librespot?name=Spotify\&devicename=$DEVICE_NAME\&bitrate=320\&volume=100$credentials," /usr/etc/snapserver.conf
