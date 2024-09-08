@@ -12,7 +12,7 @@ else
   credentials=""
   if [[ -n "${USERNAME:-}" ]] && [[ -n "${PASSWORD:-}" ]]; then
     credentials="\&username=$USERNAME\&password=$PASSWORD"
-  elif [[ -n "${CACHE}" ]]; then
+  elif [[ -n "${CACHE:-}" ]]; then
     credentials="\&cache=$CACHE"
   fi
 
